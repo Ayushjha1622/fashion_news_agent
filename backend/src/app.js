@@ -18,6 +18,8 @@ app.get("/", (req, res) => {
   });
 });
 
+
+
 app.use("/api/topics", topicRoutes);
 app.use("/api/sources", sourceRoutes);
 app.use("/api/competitors",competitorRoutes);

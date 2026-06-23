@@ -8,4 +8,4 @@ mongo_uri = os.getenv("MONGO_URI")
 
 client = MongoClient(mongo_uri)
 
-db = client["fashion-agent"]
+db = client.get_database("test")
