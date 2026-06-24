@@ -1,31 +1,37 @@
-from app.agents.relevance_agent import analyze_relevance
-from app.agents.summary_agent import generate_summary
-from app.agents.impact_agent import analyze_impact
+from app.agents.unified_analysis_agent import analyze_news
 
 
 def analyze_article(article):
 
-    relevance = analyze_relevance(article)
+    analysis = analyze_news(article)
 
-    article["relevanceScore"] = relevance.get("relevanceScore", 0)
+    article["relevanceScore"] = analysis.get(
+        "relevanceScore",
+        0
+    )
 
-    article["reason"] = relevance.get("reason", "")
+    article["reason"] = analysis.get(
+        "reason",
+        ""
+    )
 
-    if article["relevanceScore"] < 50:
-        article["filtered"] = True
+    article["summary"] = analysis.get(
+        "summary",
+        []
+    )
 
-        return article
+    article["impact"] = analysis.get(
+        "impact",
+        "LOW"
+    )
 
-    summary = generate_summary(article)
+    article["impactReason"] = analysis.get(
+        "impactReason",
+        ""
+    )
 
-    impact = analyze_impact(article)
-
-    article["summary"] = summary.get("summary", [])
-
-    article["impact"] = impact.get("impact", "LOW")
-
-    article["impactReason"] = impact.get("reason", "")
-
-    article["filtered"] = False
+    article["filtered"] = (
+        article["relevanceScore"] < 30
+    )
 
     return article
