@@ -49,10 +49,8 @@ def fetch_gnews(query="fashion"):
 
         return articles
 
-    except requests.exceptions.RequestException as e:
-        print(f"GNews Request Error: {str(e)}")
+    except requests.exceptions.RequestException:
         return []
 
-    except Exception as e:
-        print(f"GNews Error: {str(e)}")
+    except Exception:
         return []
