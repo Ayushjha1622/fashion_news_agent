@@ -8,38 +8,6 @@ from app.core.database import db
 router = APIRouter()
 
 
-@router.get("/analyze-first")
-def analyze_first():
-
-    articles = collect_news()
-
-    if not articles:
-        return {
-            "message": "No articles found"
-        }
-
-    return analyze_article(
-        articles[0]
-    )
-
-@router.get("/analyze-top-5")
-def analyze_top_5():
-
-    articles = collect_news()
-
-    results = []
-
-    for article in articles[:5]:
-
-        results.append(
-            analyze_article(article)
-        )
-
-    return {
-        "count": len(results),
-        "articles": results
-    }
-
 @router.get("/analyze-important")
 def analyze_important():
 
@@ -124,9 +92,9 @@ def latest_articles():
         "articles": articles
     }
 
-
 @router.get("/stats")
 def stats():
+
 
     total = db.articles.count_documents({})
 
@@ -148,3 +116,48 @@ def stats():
         "mediumImpact": medium,
         "lowImpact": low
     }
+
+@router.get("/competitor-news")
+def competitor_news():
+
+    articles = list(
+        db.articles.find(
+            {
+                "competitorsMentioned": {
+                    "$exists": True,
+                    "$ne": []
+                }
+            },
+            {
+                "_id": 0
+            }
+        )
+    )
+
+    return {
+        "count": len(articles),
+        "articles": articles
+    }
+
+
+@router.get("/topic-news")
+def topic_news():
+
+    articles = list(
+        db.articles.find(
+            {
+                "filtered": False
+            },
+            {
+                "_id": 0
+            }
+        )
+    )
+
+    return {
+        "count": len(articles),
+        "articles": articles
+    }
+
+
+

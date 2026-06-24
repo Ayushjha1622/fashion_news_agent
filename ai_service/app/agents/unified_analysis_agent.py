@@ -2,10 +2,11 @@ import json
 import re
 
 from app.services.mistral_service import generate
-
+from app.core.database import db
 
 def analyze_news(article):
 
+    topics = get_topics()
     prompt = f"""
 You are an Economic Intelligence Analyst.
 
@@ -101,6 +102,13 @@ Description:
 
 Content:
 {article["content"]}
+
+Monitored Topics:
+
+{topics}
+
+Give higher relevance scores
+to articles related to these topics.
 """
 
     try:
@@ -129,3 +137,18 @@ Content:
             "impact": "LOW",
             "impactReason": "Analysis failed"
         }
+    
+
+def get_topics():
+
+    topics = list(
+        db.topics.find(
+            {},
+            {"_id": 0}
+        )
+    )
+
+    return [
+        topic["name"]
+        for topic in topics
+    ]

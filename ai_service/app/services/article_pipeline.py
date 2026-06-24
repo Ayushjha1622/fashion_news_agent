@@ -8,7 +8,7 @@ def analyze_and_save():
     articles = collect_news()
 
     # Process only first 3 articles during development
-    articles = articles[:3]
+    articles = articles[:5]
 
     saved = 0
     skipped = 0
