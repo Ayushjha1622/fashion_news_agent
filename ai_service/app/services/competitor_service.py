@@ -1,17 +1,51 @@
+from datetime import datetime
 from app.core.database import db
 
 
+def add_competitor(name):
+
+    name = name.lower()
+
+    existing = db.competitors.find_one(
+        {
+            "name": name
+        }
+    )
+
+    if existing:
+        return False
+
+    db.competitors.insert_one(
+        {
+            "name": name,
+            "active": True,
+            "createdAt": datetime.utcnow(),
+            "updatedAt": datetime.utcnow()
+        }
+    )
+
+    return True
+
 def get_competitors():
 
-    competitors = list(
+    return list(
         db.competitors.find(
-            {},
+            {"active": True},
             {"_id": 0}
         )
     )
 
-    return competitors
 
+def get_all_competitors():
+
+    return list(
+        db.competitors.find(
+            {},
+            {
+                "_id": 0
+            }
+        )
+    )
 
 def detect_competitors(article):
 

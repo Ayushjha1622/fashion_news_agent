@@ -30,13 +30,15 @@ def generate_daily_brief():
 
     high_impact = list(
         db.articles.find(
-        {"impact": "HIGH"},
-        {"_id": 0}
-    ).sort(
-        "relevanceScore",
-        -1
-    ).limit(5)
-)
+            {
+                "impact": "HIGH"
+            },
+            {"_id": 0}
+        ).sort(
+            "relevanceScore",
+            -1
+        ).limit(5)
+    )
 
     competitor_news = list(
         db.articles.find(

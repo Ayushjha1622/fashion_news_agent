@@ -16,3 +16,7 @@ def save_article(article):
     db.articles.insert_one(article)
 
     return True
+
+
+def article_exists(url: str) -> bool:
+    return db.articles.find_one({"url": url}) is not None

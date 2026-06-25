@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'Geist';
+    src: url('https://cdn.jsdelivr.net/gh/vercel/geist-font@main/packages/next/dist/fonts/geist-sans/Geist-Regular.woff2') format('woff2');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Geist';
+    src: url('https://cdn.jsdelivr.net/gh/vercel/geist-font@main/packages/next/dist/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
+    font-weight: 700;
+}
+@font-face {
+    font-family: 'Geist';
+    src: url('https://cdn.jsdelivr.net/gh/vercel/geist-font@main/packages/next/dist/fonts/geist-sans/Geist-Black.woff2') format('woff2');
+    font-weight: 900;
+}
+
+@theme {
+  --color-primary: #a78bfa;
+  --color-primary-container: #7c3aed;
+  --color-secondary: #71717a;
+  --color-secondary-container: #27272a;
+  --color-tertiary: #34d399;
+  --color-tertiary-container: #065f46;
+  --color-on-tertiary-container: #bbf7d0;
+  --color-error: #ef4444;
+  --color-error-container: #3b1111;
+  --color-on-error-container: #fca5a5;
+  --color-background: #09090b;
+  --color-surface: #0c0c0f;
+  --color-surface-container: #121215;
+  --color-surface-container-highest: #1e1e22;
+  --color-surface-container-low: #0f0f12;
+  --color-surface-container-lowest: #09090b;
+  --color-on-surface: #fafafa;
+  --color-on-surface-variant: #a1a1aa;
+  --color-outline: #52525b;
+  --color-outline-variant: #27272a;
+
+  --font-sans: "Geist", sans-serif;
+  --font-headline: "Geist", sans-serif;
+  --font-body: "Geist", sans-serif;
+  --font-label: "Geist", sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.glass-card {
+  background: rgba(18, 18, 21, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-outline-variant);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-background);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-outline-variant);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-outline);
+}
+
+.relevance-gradient {
+    background: linear-gradient(90deg, #a78bfa 0%, #34d399 100%);
+}

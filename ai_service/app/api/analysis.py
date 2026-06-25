@@ -8,28 +8,6 @@ from app.core.database import db
 router = APIRouter()
 
 
-@router.get("/analyze-important")
-def analyze_important():
-
-    articles = collect_news()
-
-    results = []
-
-    for article in articles[:5]:
-        analyzed = analyze_article(article)
-
-        if not analyzed.get("filtered", False):
-            results.append(analyzed)
-
-    return {"count": len(results), "articles": results}
-
-
-@router.get("/analyze-and-save")
-def analyze_and_save_route():
-
-    return analyze_and_save()
-
-
 @router.get("/articles")
 def get_articles():
 
@@ -91,8 +69,4 @@ def topic_news():
     articles = list(db.articles.find({"filtered": False}, {"_id": 0}))
 
     return {"count": len(articles), "articles": articles}
-
-@router.get("/daily-brief")
-def daily_brief():
-
-    return generate_daily_brief()
+

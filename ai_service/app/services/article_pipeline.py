@@ -1,6 +1,7 @@
 from app.services.news_collection_service import collect_news
 from app.services.news_analysis_service import analyze_article
-from app.services.article_service import save_article
+from app.services.news_analysis_service import analyze_article
+from app.services.article_service import save_article, article_exists
 
 
 def analyze_and_save():
@@ -17,6 +18,10 @@ def analyze_and_save():
     for article in articles:
 
         try:
+
+            if article_exists(article.get("url")):
+                skipped += 1
+                continue
 
             analyzed = analyze_article(article)
 
