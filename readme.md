@@ -224,11 +224,17 @@ DELETE /competitors/{name}
 # Environment Variables
 
 ## Node.js Backend (`backend/.env`)
+
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secure_jwt_secret
 ```
+
+> **Tip**: You can generate a secure `JWT_SECRET` by running the following command in your terminal:
+> ```bash
+> node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+> ```
 
 ## FastAPI (`ai_service/.env`)
 ```env
@@ -272,7 +278,9 @@ npm run dev
 
 # Docker Setup
 
-## Run Backend with Docker
+## Run AI Service with Docker
+
+The AI Service (FastAPI) has a complete `Dockerfile` provided. You can run it via Docker Compose.
 
 ### Prerequisites
 - Docker and Docker Compose installed
@@ -312,9 +320,8 @@ docker compose down
 
 Create `ai_service/.env` with:
 ```env
-MONGO_URI=your_mongodb_atlas_connection_string
+MONGODB_URI=your_mongodb_atlas_connection_string
 MISTRAL_API_KEY=your_mistral_api_key
-GNEWS_API_KEY=your_gnews_api_key
 ```
 
 Use `ai_service/.env.example` as a template.
