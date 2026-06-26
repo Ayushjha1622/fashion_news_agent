@@ -242,6 +242,12 @@ MISTRAL_API_KEY=your_api_key
 MONGODB_URI=your_mongodb_uri
 ```
 
+## React Frontend (`frontend/.env`)
+```env
+VITE_AI_SERVICE_URL=http://127.0.0.1:8000
+VITE_NODE_API_URL=http://localhost:5000
+```
+
 ---
 
 # Installation
