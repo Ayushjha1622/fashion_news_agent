@@ -270,6 +270,57 @@ npm run dev
 
 ---
 
+# Docker Setup
+
+## Run Backend with Docker
+
+### Prerequisites
+- Docker and Docker Compose installed
+- `.env` file in `ai_service/` with required environment variables (see [Environment Variables](#environment-variables))
+
+### Build
+
+From the project root:
+```bash
+docker compose build
+```
+
+### Start
+
+```bash
+docker compose up
+```
+
+Or in detached mode:
+```bash
+docker compose up -d
+```
+
+### Access APIs
+
+- **Swagger UI**: http://localhost:8000/docs
+- **OpenAPI Schema**: http://localhost:8000/openapi.json
+- **Dashboard Summary**: http://localhost:8000/dashboard-summary
+
+### Stop
+
+```bash
+docker compose down
+```
+
+### Environment File
+
+Create `ai_service/.env` with:
+```env
+MONGO_URI=your_mongodb_atlas_connection_string
+MISTRAL_API_KEY=your_mistral_api_key
+GNEWS_API_KEY=your_gnews_api_key
+```
+
+Use `ai_service/.env.example` as a template.
+
+---
+
 # Why Mistral AI?
 
 Mistral AI is used to transform raw news articles into structured intelligence by:

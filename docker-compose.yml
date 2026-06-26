@@ -1,0 +1,10 @@
+services:
+  ai-service:
+    build:
+      context: ./ai_service
+    container_name: fashion-news-agent-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./ai_service/.env
+    restart: unless-stopped
