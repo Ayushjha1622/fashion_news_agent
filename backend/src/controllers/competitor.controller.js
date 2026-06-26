@@ -1,4 +1,4 @@
-const Competitor = require("../models/Competitor");
+const Competitor = require("../models/competitor");
 
 const createCompetitor = async (req, res) => {
   try {
