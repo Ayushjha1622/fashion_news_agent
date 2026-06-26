@@ -39,6 +39,17 @@ credentials.json
 google-credentials.json
 mistral_key
 stripe_key
+secrets.json
+client_secret.json
+client_secrets.json
+service-account.json
+service-account-key.json
+*.p8
+*.pub
+*.bck
+.npmrc
+.htpasswd
+.netrc
 
 # OS/IDE
 .DS_Store
