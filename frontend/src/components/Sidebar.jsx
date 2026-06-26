@@ -1,8 +1,8 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Rss, Hash, Users, Calendar, Activity, Settings, User } from "lucide-react";
+import { LayoutDashboard, Rss, Hash, Users, Calendar, Activity, Settings, User, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, setIsOpen }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -21,17 +21,26 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-full flex flex-col py-6 px-4 bg-surface-container-low w-64 border-r border-outline-variant z-50">
-      <div className="mb-10 px-2">
-        <h1 className="font-headline text-xl font-bold tracking-tight text-on-surface">Equilibrium</h1>
-        <p className="text-secondary text-[10px] uppercase tracking-widest font-bold mt-1">Intelligence Platform</p>
+    <aside className={`fixed left-0 top-0 h-full flex flex-col py-6 px-4 bg-surface-container-low w-64 border-r border-outline-variant z-50 transition-transform duration-300 ease-in-out transform ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
+      <div className="mb-10 px-2 flex justify-between items-center">
+        <div>
+          <h1 className="font-headline text-xl font-bold tracking-tight text-on-surface">Equilibrium</h1>
+          <p className="text-secondary text-[10px] uppercase tracking-widest font-bold mt-1">Intelligence Platform</p>
+        </div>
+        <button 
+          className="md:hidden text-on-surface-variant hover:bg-surface-container-highest p-1 rounded-lg"
+          onClick={() => setIsOpen(false)}
+        >
+          <X size={20} />
+        </button>
       </div>
       
-      <nav className="flex-1 space-y-1 font-body text-sm tracking-normal">
+      <nav className="flex-1 space-y-1 font-body text-sm tracking-normal overflow-y-auto">
         {navItems.map((item) => (
           <NavLink
             key={item.name}
             to={item.path}
+            onClick={() => setIsOpen(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-lg duration-200 ease-in-out cursor-pointer ${
                 isActive
