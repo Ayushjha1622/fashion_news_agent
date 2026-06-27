@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios";
+import api, { nodeApi } from "../api/axios";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { handleApiError } from "../utils/errorHandler";
 import { FileText, AlignLeft, Rss, Share, Eye, Radar, TrendingUp, CheckCircle, Upload, Globe, Megaphone } from "lucide-react";
@@ -50,7 +50,7 @@ export default function DailyBrief() {
             <p className="text-on-surface-variant mt-1">Intelligence summary of market movements, competitor signals, and emerging trends.</p>
           </div>
           <button 
-            onClick={() => window.open("http://localhost:5000/api/pdf/daily-brief", "_blank")}
+            onClick={() => window.open(`${nodeApi.defaults.baseURL}/api/pdf/daily-brief`, "_blank")}
             className="bg-primary text-on-primary px-6 py-2.5 rounded font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
             <FileText size={18} />

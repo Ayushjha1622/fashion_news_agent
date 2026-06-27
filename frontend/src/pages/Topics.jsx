@@ -14,7 +14,7 @@ export default function Topics() {
   useEffect(() => {
     api.get("/topics")
       .then((res) => {
-        setTopics(res.data);
+        setTopics(res.data?.data || res.data);
       })
       .catch(handleApiError)
       .finally(() => setLoading(false));
@@ -24,6 +24,16 @@ export default function Topics() {
     api.delete(`/topics/${name}`)
       .then(() => {
         setTopics(topics => topics.filter(t => t.name !== name));
+      })
+      .catch(handleApiError);
+  };
+
+  const handleAddTopic = () => {
+    const name = window.prompt("Enter new topic name:");
+    if (!name) return;
+    api.post("/topics", { name })
+      .then(() => {
+        setTopics([...topics, { name }]);
       })
       .catch(handleApiError);
   };
@@ -40,7 +50,7 @@ export default function Topics() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-primary text-on-primary px-5 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+          <button onClick={handleAddTopic} className="bg-primary text-on-primary px-5 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             <Plus size={18} />
             <span>Add New Topic</span>
           </button>

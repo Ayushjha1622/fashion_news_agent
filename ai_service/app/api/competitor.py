@@ -18,10 +18,15 @@ def competitors():
     return get_all_competitors()
 
 
-@router.post("")
-def create_competitor(name: str):
+from pydantic import BaseModel
 
-    success = add_competitor(name)
+class CompetitorCreate(BaseModel):
+    name: str
+
+@router.post("")
+def create_competitor(competitor: CompetitorCreate):
+
+    success = add_competitor(competitor.name)
 
     if not success:
         return {

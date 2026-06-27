@@ -4,11 +4,47 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import { handleApiError } from "../utils/errorHandler";
 import { Filter, Calendar, ChevronDown, ChevronRight, Share, Bookmark, Globe, Plus, AlertTriangle, Sparkles, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 export default function Feed() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [briefArticles, setBriefArticles] = useState(() => JSON.parse(localStorage.getItem('feed_briefArticles') || '[]'));
+  
+  const [sourceFilter, setSourceFilter] = useState(localStorage.getItem('feed_sourceFilter') || "All Signals");
+  const [impactFilter, setImpactFilter] = useState(localStorage.getItem('feed_impactFilter') || "All Impacts");
+
+  const filteredArticles = articles.filter(article => {
+    const matchSource = sourceFilter === "All Signals" || article.source === sourceFilter;
+    const impactVal = impactFilter.split(" ")[0]; // "High Impact" -> "High"
+    const matchImpact = impactFilter === "All Impacts" || article.impact === impactVal || article.impact === impactVal.toUpperCase();
+    return matchSource && matchImpact;
+  });
+
+  const handleSaveView = () => {
+    localStorage.setItem('feed_sourceFilter', sourceFilter);
+    localStorage.setItem('feed_impactFilter', impactFilter);
+    toast.success("View preferences saved successfully!");
+  };
+
+  const handleAddToBrief = () => {
+    if (!selectedArticle) return;
+    
+    const isAlreadyAdded = briefArticles.includes(selectedArticle._id);
+    let newBriefArticles;
+    
+    if (isAlreadyAdded) {
+        newBriefArticles = briefArticles.filter(id => id !== selectedArticle._id);
+        toast.success("Removed from brief");
+    } else {
+        newBriefArticles = [...briefArticles, selectedArticle._id];
+        toast.success("Added to Daily Brief!");
+    }
+    
+    setBriefArticles(newBriefArticles);
+    localStorage.setItem('feed_briefArticles', JSON.stringify(newBriefArticles));
+  };
 
   useEffect(() => {
     api.get("/latest")
@@ -44,7 +80,10 @@ export default function Feed() {
         <section className="p-6 border-b border-outline-variant flex items-center gap-4 bg-surface-container-low/50 overflow-x-auto custom-scrollbar">
           <div className="flex flex-col gap-1 min-w-[120px]">
             <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Source</label>
-            <select className="bg-surface-container border border-outline-variant rounded-lg text-xs py-1.5 pl-2 pr-8 focus:ring-1 focus:ring-primary outline-none appearance-none cursor-pointer">
+            <select 
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="bg-surface-container border border-outline-variant rounded-lg text-xs py-1.5 pl-2 pr-8 focus:ring-1 focus:ring-primary outline-none appearance-none cursor-pointer">
               <option>All Signals</option>
               <option>Reuters</option>
               <option>Bloomberg</option>
@@ -52,9 +91,14 @@ export default function Feed() {
           </div>
           <div className="flex flex-col gap-1 min-w-[120px]">
             <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Impact</label>
-            <select className="bg-surface-container border border-outline-variant rounded-lg text-xs py-1.5 pl-2 pr-8 focus:ring-1 focus:ring-primary outline-none appearance-none cursor-pointer">
+            <select 
+              value={impactFilter}
+              onChange={(e) => setImpactFilter(e.target.value)}
+              className="bg-surface-container border border-outline-variant rounded-lg text-xs py-1.5 pl-2 pr-8 focus:ring-1 focus:ring-primary outline-none appearance-none cursor-pointer">
+              <option>All Impacts</option>
               <option>High Impact</option>
               <option>Medium Impact</option>
+              <option>Low Impact</option>
             </select>
           </div>
           <div className="flex flex-col gap-1 min-w-[140px]">
@@ -65,7 +109,7 @@ export default function Feed() {
             </div>
           </div>
           <div className="ml-auto self-end">
-            <button className="flex items-center gap-2 bg-primary text-on-primary font-bold text-xs px-4 py-2 rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/10">
+            <button onClick={handleSaveView} className="flex items-center gap-2 bg-primary text-on-primary font-bold text-xs px-4 py-2 rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/10">
               <Filter size={14} /> Save View
             </button>
           </div>
@@ -77,7 +121,7 @@ export default function Feed() {
           {/* Left: Article List */}
           <div className="w-[450px] border-r border-outline-variant flex flex-col bg-surface-container-lowest relative z-10 overflow-y-auto custom-scrollbar">
             <div className="p-4 flex justify-between items-center border-b border-outline-variant bg-surface-container-low/30 sticky top-0 backdrop-blur z-20">
-              <span className="text-xs text-on-surface-variant font-medium">{articles.length} Signals Found</span>
+              <span className="text-xs text-on-surface-variant font-medium">{filteredArticles.length} Signals Found</span>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-on-surface-variant">SORT BY</span>
                 <button className="text-xs flex items-center gap-1 font-bold">Relevance <ChevronDown size={14} /></button>
@@ -85,7 +129,7 @@ export default function Feed() {
             </div>
 
             <div className="divide-y divide-outline-variant">
-              {articles.map((article, idx) => {
+              {filteredArticles.map((article, idx) => {
                 const isActive = selectedArticle?._id === article._id;
                 const isCritical = article.impact === 'High';
                 
@@ -215,8 +259,18 @@ export default function Feed() {
                     <a href={selectedArticle.url} target="_blank" rel="noreferrer" className="bg-surface-container text-on-surface border border-outline-variant px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-secondary-container transition-all flex items-center gap-2">
                       <Globe size={16} /> Full Source Article
                     </a>
-                    <button className="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 hover:brightness-110 transition-all">
-                      <Plus size={16} /> Add to Brief
+                    <button 
+                      onClick={handleAddToBrief}
+                      className={`px-6 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-all ${
+                        briefArticles.includes(selectedArticle._id)
+                          ? 'bg-surface-container-highest text-primary border border-primary/30' 
+                          : 'bg-primary text-on-primary hover:brightness-110'
+                      }`}>
+                      {briefArticles.includes(selectedArticle._id) ? (
+                        <><CheckCircle size={16} /> In Brief</>
+                      ) : (
+                        <><Plus size={16} /> Add to Brief</>
+                      )}
                     </button>
                   </div>
                 </div>

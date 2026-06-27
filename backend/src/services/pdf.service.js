@@ -13,7 +13,8 @@ async function generateDailyBriefPdf() {
   await page.setViewport({ width: 1440, height: 1080 });
 
   // Navigate to the Daily Brief page with the print=true flag to hide the navigation menus
-  await page.goto("http://localhost:5173/brief?print=true", {
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  await page.goto(`${frontendUrl}/brief?print=true`, {
     waitUntil: "networkidle0", // Wait until there are no network requests for at least 500ms
     timeout: 30000
   });

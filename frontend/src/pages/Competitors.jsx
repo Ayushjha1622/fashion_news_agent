@@ -13,11 +13,21 @@ export default function Competitors() {
   useEffect(() => {
     api.get("/competitors")
       .then((res) => {
-        setCompetitors(res.data);
+        setCompetitors(res.data?.data || res.data);
       })
       .catch(handleApiError)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleAddCompetitor = () => {
+    const name = window.prompt("Enter new competitor name:");
+    if (!name) return;
+    api.post("/competitors", { name })
+      .then(() => {
+        setCompetitors([...competitors, { name }]);
+      })
+      .catch(handleApiError);
+  };
 
   return (
     <DashboardLayout title="Monitoring Management">
@@ -31,7 +41,7 @@ export default function Competitors() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-primary text-on-primary px-5 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+          <button onClick={handleAddCompetitor} className="bg-primary text-on-primary px-5 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-primary/20">
             <Plus size={18} />
             <span>Add New Competitor</span>
           </button>

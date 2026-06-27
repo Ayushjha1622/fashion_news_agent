@@ -18,12 +18,15 @@ def topics():
     return get_all_topics()
 
 
-@router.post("")
-def create_topic(
-    name: str
-):
+from pydantic import BaseModel
 
-    add_topic(name)
+class TopicCreate(BaseModel):
+    name: str
+
+@router.post("")
+def create_topic(topic: TopicCreate):
+
+    add_topic(topic.name)
 
     return {
         "success": True,
